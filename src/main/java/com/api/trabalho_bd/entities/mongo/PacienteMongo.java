@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class PacienteMongo {
     @Id
     private String id;
-    private LocalDate data_nascimento;
+    private LocalDate dataNascimento;
     private String idHistoricoClinico;
     private String convenioCnpj;
     private String email;
