@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -28,24 +29,30 @@ public class MedicoService {
         return medicoRepository.findAll();
     }
 
-    public Medico findById(long id) {
-        return medicoRepository.findByIdMedico(id);
+    public Medico findById(int id) {
+        return medicoRepository.findById(id).orElseThrow(() -> new RuntimeException("Médico com id " + id + " não encontrado."));
     }
 
-    public Medico update(long id, UpdateMedicoForm dto) {
-        Medico medicoAntigo = medicoRepository.findByIdMedico(id);
+    public Medico update(int id, UpdateMedicoForm dto) {
+        Optional<Medico> medicoAntigo = medicoRepository.findById(id);
 
-        if (dto.dataNascimento() != null) medicoAntigo.setDataNascimento(dto.dataNascimento());
-        if (dto.crm() != null) medicoAntigo.setCrm(dto.crm());
-        if (dto.telefone() != null) medicoAntigo.setTelefone(dto.telefone());
-        if (dto.nome() != null) medicoAntigo.setNome(dto.nome());
-        if (dto.cpf() != null) medicoAntigo.setCpf(dto.cpf());
+        if (medicoAntigo.isEmpty()) throw new RuntimeException("Médico com id " + id + " não encontrado.");
 
-        return medicoRepository.save(medicoAntigo);
+        Medico medico = medicoAntigo.get();
+
+        if (dto.dataNascimento() != null) medico.setDataNascimento(dto.dataNascimento());
+        if (dto.crm() != null) medico.setCrm(dto.crm());
+        if (dto.telefone() != null) medico.setTelefone(dto.telefone());
+        if (dto.nome() != null) medico.setNome(dto.nome());
+        if (dto.cpf() != null) medico.setCpf(dto.cpf());
+
+        return medicoRepository.save(medico);
     }
 
-    public void delete(long id) {
-        medicoRepository.delete(medicoRepository.findByIdMedico(id));
+    public void delete(int id) {
+        medicoRepository.delete(medicoRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Médico com id " + id + " não encontrado.")
+        ));
     }
 
 }

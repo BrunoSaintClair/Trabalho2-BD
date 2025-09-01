@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class Consulta {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_consulta")
-    private int idConsulta;
+    private int id;
     @Column(name = "data_consulta")
     private LocalDate dataConsulta;
     @Column(name = "horario_consulta")

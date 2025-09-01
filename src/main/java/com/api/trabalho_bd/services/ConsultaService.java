@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -27,24 +28,30 @@ public class ConsultaService {
         return consultaRepository.findAll();
     }
 
-    public Consulta findById(long id) {
-        return consultaRepository.findByIdConsulta(id);
+    public Consulta findById(int id) {
+        return consultaRepository.findById(id).orElseThrow(() -> new RuntimeException("Consulta com id " + id + " não encontrada."));
     }
 
-    public Consulta update(long id, UpdateConsultaForm dto) {
-        Consulta consultaAntiga = consultaRepository.findByIdConsulta(id);
+    public Consulta update(int id, UpdateConsultaForm dto) {
+        Optional<Consulta> consultaAntiga = consultaRepository.findById(id);
 
-        if (dto.dataConsulta() != null) consultaAntiga.setDataConsulta(dto.dataConsulta());
-        if (dto.horarioConsulta() != null) consultaAntiga.setHorarioConsulta(dto.horarioConsulta());
-        if (dto.idMedico() != null) consultaAntiga.setIdMedico(dto.idMedico());
-        if (dto.idPaciente() != null) consultaAntiga.setIdPaciente(dto.idPaciente());
-        if (dto.tipoConsulta() != null) consultaAntiga.setTipoConsulta(dto.tipoConsulta());
+        if (consultaAntiga.isEmpty()) throw new RuntimeException("Consulta com id " + id + " não encontrada.");
 
-        return consultaRepository.save(consultaAntiga);
+        Consulta consulta = consultaAntiga.get();
+
+        if (dto.dataConsulta() != null) consulta.setDataConsulta(dto.dataConsulta());
+        if (dto.horarioConsulta() != null) consulta.setHorarioConsulta(dto.horarioConsulta());
+        if (dto.idMedico() != null) consulta.setIdMedico(dto.idMedico());
+        if (dto.idPaciente() != null) consulta.setIdPaciente(dto.idPaciente());
+        if (dto.tipoConsulta() != null) consulta.setTipoConsulta(dto.tipoConsulta());
+
+        return consultaRepository.save(consulta);
     }
 
-    public void delete(long id) {
-        consultaRepository.delete(consultaRepository.findByIdConsulta(id));
+    public void delete(int id) {
+        consultaRepository.delete(consultaRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Consulta com id " + id + " não encontrada."))
+        );
     }
 
 }

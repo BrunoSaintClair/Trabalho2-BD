@@ -33,17 +33,17 @@ public class MedicoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> findById(@PathVariable long id) {
+    public ResponseEntity<Object> findById(@PathVariable int id) {
         return ResponseEntity.ok().body(medicoService.findById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable long id, @RequestBody UpdateMedicoForm dto) {
+    public ResponseEntity<Object> update(@PathVariable int id, @RequestBody UpdateMedicoForm dto) {
         return ResponseEntity.ok().body(medicoService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable long id) {
+    public ResponseEntity<Object> delete(@PathVariable int id) {
         medicoService.delete(id);
         return ResponseEntity.noContent().build();
     }

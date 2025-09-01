@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class Medico {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idmedico")
-    private int idMedico;
+    private int id;
     @Column(name = "data_nascimento")
     private LocalDate dataNascimento;
     private String crm;

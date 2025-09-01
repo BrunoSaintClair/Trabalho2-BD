@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -26,28 +27,36 @@ public class PacienteService {
         return pacienteRepository.findAll();
     }
 
-    public Paciente findById(long id) {
-        return pacienteRepository.findByIdPaciente(id);
+    public Paciente findById(int id) {
+        return pacienteRepository.findById(id).orElseThrow(() -> new RuntimeException("Paciente com id " + id + " não encontrado."));
     }
 
-    public Paciente update(long id, UpdatePacienteForm dto) {
-        Paciente pacienteAntigo = pacienteRepository.findByIdPaciente(id);
+    public Paciente update(int id, UpdatePacienteForm dto) {
+        Optional<Paciente> pacienteAntigo = pacienteRepository.findById(id);
 
-        if (dto.dataNascimento() != null) pacienteAntigo.setDataNascimento(dto.dataNascimento());
-        if (dto.idHistoricoClinico() != null) pacienteAntigo.setIdHistoricoClinico(dto.idHistoricoClinico());
-        if (dto.convenioCnpj() != null) pacienteAntigo.setConvenioCnpj(dto.convenioCnpj());
-        if (dto.email() != null) pacienteAntigo.setEmail(dto.email());
-        if (dto.telefone() != null) pacienteAntigo.setTelefone(dto.telefone());
-        if (dto.registroGeral() != null) pacienteAntigo.setRegistroGeral(dto.registroGeral());
-        if (dto.sexo() != null) pacienteAntigo.setSexo(dto.sexo());
-        if (dto.nome() != null) pacienteAntigo.setNome(dto.nome());
-        if (dto.cpf() != null) pacienteAntigo.setCpf(dto.cpf());
+        if (pacienteAntigo.isEmpty()) {
+            throw new RuntimeException("Paciente com id " + id + " não encontrado.");
+        }
 
-        return pacienteRepository.save(pacienteAntigo);
+        Paciente novoCadastro = pacienteAntigo.get();
+
+        if (dto.dataNascimento() != null) novoCadastro.setDataNascimento(dto.dataNascimento());
+        if (dto.idHistoricoClinico() != null) novoCadastro.setIdHistoricoClinico(dto.idHistoricoClinico());
+        if (dto.convenioCnpj() != null) novoCadastro.setConvenioCnpj(dto.convenioCnpj());
+        if (dto.email() != null) novoCadastro.setEmail(dto.email());
+        if (dto.telefone() != null) novoCadastro.setTelefone(dto.telefone());
+        if (dto.registroGeral() != null) novoCadastro.setRegistroGeral(dto.registroGeral());
+        if (dto.sexo() != null) novoCadastro.setSexo(dto.sexo());
+        if (dto.nome() != null) novoCadastro.setNome(dto.nome());
+        if (dto.cpf() != null) novoCadastro.setCpf(dto.cpf());
+
+        return pacienteRepository.save(novoCadastro);
     }
 
-    public void delete(long id) {
-        pacienteRepository.delete(pacienteRepository.findByIdPaciente(id));
+    public void delete(int id) {
+        pacienteRepository.delete(pacienteRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Paciente com id " + id + " não encontrado.")
+        ));
     }
 
 }
