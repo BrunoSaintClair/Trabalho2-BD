@@ -18,4 +18,12 @@ public class MedicoMongo {
     private String telefone;
     private String nome;
     private String cpf;
+
+    public MedicoMongo(LocalDate dataNascimento, String crm, String telefone, String nome, String cpf) {
+        this.dataNascimento = dataNascimento;
+        this.crm = crm;
+        this.telefone = telefone;
+        this.nome = nome;
+        this.cpf = cpf;
+    }
 }

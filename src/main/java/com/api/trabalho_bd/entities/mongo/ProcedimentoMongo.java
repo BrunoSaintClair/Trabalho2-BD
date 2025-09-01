@@ -23,4 +23,13 @@ public class ProcedimentoMongo {
     private String medicoId;
     private String clinicaId;
 
+    public ProcedimentoMongo(String tipo, LocalDate dataAgendamento, Time horarioAgendamento, String status, String pacienteId, String medicoId, String clinicaId) {
+        this.tipo = tipo;
+        this.dataAgendamento = dataAgendamento;
+        this.horarioAgendamento = horarioAgendamento;
+        this.status = status;
+        this.pacienteId = pacienteId;
+        this.medicoId = medicoId;
+        this.clinicaId = clinicaId;
+    }
 }

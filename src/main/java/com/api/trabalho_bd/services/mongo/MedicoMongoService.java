@@ -1,5 +1,8 @@
 package com.api.trabalho_bd.services.mongo;
 
+import com.api.trabalho_bd.dtos.forms.mongo.CreateMedicoMongoForm;
+import com.api.trabalho_bd.dtos.forms.mongo.UpdateMedicoMongoForm;
+import com.api.trabalho_bd.entities.Medico;
 import com.api.trabalho_bd.entities.mongo.MedicoMongo;
 import com.api.trabalho_bd.repositories.mongo.MedicoMongoRepository;
 import lombok.AllArgsConstructor;
@@ -16,24 +19,38 @@ public class MedicoMongoService {
     @Autowired
     private final MedicoMongoRepository medicoRepository;
 
-    public MedicoMongo create(MedicoMongo medico) {
-        return medicoRepository.save(medico);
+    public MedicoMongo create(CreateMedicoMongoForm dto) {
+        return medicoRepository.save(new MedicoMongo(dto.dataNascimento(), dto.crm(), dto.telefone(),
+                dto.nome(), dto.cpf()));
     }
 
     public List<MedicoMongo> findAll() {
         return medicoRepository.findAll();
     }
 
-    public Optional<MedicoMongo> findById(String id) {
-        return medicoRepository.findById(id);
+    public MedicoMongo findById(String id) {
+        return medicoRepository.findById(id).orElseThrow(() -> new RuntimeException("Médico com id " + id + " não encontrado."));
     }
 
-    public MedicoMongo update(MedicoMongo medico) {
+    public MedicoMongo update(String id, UpdateMedicoMongoForm dto) {
+        Optional<MedicoMongo> cadastroAntigo = medicoRepository.findById(id);
+
+        if (cadastroAntigo.isEmpty()) throw new RuntimeException("Médico com id " + id + " não encontrado.");
+
+        MedicoMongo medico = cadastroAntigo.get();
+
+        if (dto.dataNascimento() != null) medico.setDataNascimento(dto.dataNascimento());
+        if (dto.crm() != null) medico.setCrm(dto.crm());
+        if (dto.telefone() != null) medico.setTelefone(dto.telefone());
+        if (dto.nome() != null) medico.setNome(dto.nome());
+        if (dto.cpf() != null) medico.setCpf(dto.cpf());
+
         return medicoRepository.save(medico);
     }
 
     public void delete(String id) {
-        medicoRepository.deleteById(id);
+        MedicoMongo medico = this.findById(id);
+        medicoRepository.delete(medico);
     }
 
 }

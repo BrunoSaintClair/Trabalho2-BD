@@ -22,4 +22,19 @@ public class PacienteMongo {
     private String sexo;
     private String nome;
     private String cpf;
+
+    public PacienteMongo(LocalDate dataNascimento, String idHistoricoClinico,
+                         String convenioCnpj, String email, String telefone,
+                         String registroGeral, String sexo, String nome, String cpf) {
+        this.dataNascimento = dataNascimento;
+        this.idHistoricoClinico = idHistoricoClinico;
+        this.convenioCnpj = convenioCnpj;
+        this.email = email;
+        this.telefone = telefone;
+        this.registroGeral = registroGeral;
+        this.sexo = sexo;
+        this.nome = nome;
+        this.cpf = cpf;
+    }
+
 }
